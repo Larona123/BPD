@@ -2,6 +2,7 @@ package entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
+@Builder
 public class Risk {
 
     @Id
@@ -21,5 +22,6 @@ public class Risk {
     private String mitigationPlan;
 
     @ManyToOne
+    @JoinColumn(name = "project_id")
     private Project project;
 }

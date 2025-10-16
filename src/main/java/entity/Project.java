@@ -2,6 +2,7 @@ package entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,7 +14,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
+@Builder
 public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +27,8 @@ public class Project {
     private LocalDate endDate;
 
     @ManyToOne
-    private Client client;
+    @JoinColumn(name = "client_id")
+    private Client owner;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<Resource> resources = new ArrayList<>();

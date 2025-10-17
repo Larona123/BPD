@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+		           https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <changeSet id="v1-project-dashboard-schema" author="pramodimo">
+
+        <!-- CLIENT TABLE -->
+        <createTable tableName="client">
+            <column name="id" type="SERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(100)"/>
+            <column name="phone" type="VARCHAR(30)"/>
+            <column name="company_name" type="VARCHAR(100)"/>
+        </createTable>
+
+        <!-- PROJECT TABLE -->
+        <createTable tableName="project">
+            <column name="id" type="SERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(150)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="budget" type="NUMERIC(12,2)"/>
+            <column name="description" type="TEXT"/>
+            <column name="start_date" type="DATE"/>
+            <column name="end_date" type="DATE"/>
+            <column name="client_id" type="INTEGER"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="project" baseColumnNames="client_id"
+                                 referencedTableName="client" referencedColumnNames="id"
+                                 onDelete="SET NULL" constraintName="fk_project_client"/>
+
+        <!-- PERFORMANCE TABLE -->
+        <createTable tableName="performance">
+            <column name="id" type="SERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="planned_expenditure" type="NUMERIC(12,2)"/>
+            <column name="actual_expenditure" type="NUMERIC(12,2)"/>
+            <column name="planned_schedule" type="NUMERIC(5,2)"/>
+            <column name="actual_schedule" type="NUMERIC(5,2)"/>
+            <column name="project_id" type="INTEGER"/>
+        </createTable>
+
+        <addUniqueConstraint columnNames="project_id" tableName="performance" constraintName="uk_performance_project"/>
+        <addForeignKeyConstraint baseTableName="performance" baseColumnNames="project_id"
+                                 referencedTableName="project" referencedColumnNames="id"
+                                 onDelete="CASCADE" constraintName="fk_performance_project"/>
+
+        <!-- RISK TABLE -->
+        <createTable tableName="risk">
+            <column name="id" type="SERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="description" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="impact" type="VARCHAR(50)"/>
+            <column name="likelihood" type="VARCHAR(50)"/>
+            <column name="project_id" type="INTEGER"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="risk" baseColumnNames="project_id"
+                                 referencedTableName="project" referencedColumnNames="id"
+                                 onDelete="CASCADE" constraintName="fk_risk_project"/>
+
+        <!-- ISSUE TABLE -->
+        <createTable tableName="issue">
+            <column name="id" type="SERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="description" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="severity" type="VARCHAR(50)"/>
+            <column name="status" type="VARCHAR(50)"/>
+            <column name="project_id" type="INTEGER"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="issue" baseColumnNames="project_id"
+                                 referencedTableName="project" referencedColumnNames="id"
+                                 onDelete="CASCADE" constraintName="fk_issue_project"/>
+
+        <!-- RESOURCE TABLE -->
+        <createTable tableName="resource">
+            <column name="id" type="SERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="project_id" type="INTEGER"/>
+            <column name="dtype" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="resource" baseColumnNames="project_id"
+                                 referencedTableName="project" referencedColumnNames="id"
+                                 onDelete="CASCADE" constraintName="fk_resource_project"/>
+
+        <!-- HUMAN RESOURCE TABLE -->
+        <createTable tableName="human_resource">
+            <column name="id" type="INTEGER">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="role" type="VARCHAR(100)"/>
+            <column name="hourly_rate" type="NUMERIC(10,2)"/>
+            <column name="hours_allocated" type="INTEGER"/>
+            <column name="start_date" type="DATE"/>
+            <column name="end_date" type="DATE"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="human_resource" baseColumnNames="id"
+                                 referencedTableName="resource" referencedColumnNames="id"
+                                 onDelete="CASCADE" constraintName="fk_human_resource_resource"/>
+
+        <!-- HARDWARE RESOURCE TABLE -->
+        <createTable tableName="hardware_resource">
+            <column name="id" type="INTEGER">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="vendor" type="VARCHAR(100)"/>
+            <column name="serial_number" type="VARCHAR(100)"/>
+            <column name="under_warranty" type="BOOLEAN"/>
+            <column name="allocation_date" type="DATE"/>
+            <column name="return_date" type="DATE"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="hardware_resource" baseColumnNames="id"
+                                 referencedTableName="resource" referencedColumnNames="id"
+                                 onDelete="CASCADE" constraintName="fk_hardware_resource_resource"/>
+
+    </changeSet>
+</databaseChangeLog>

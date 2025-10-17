@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: Bitri-Projects-Dash
+  datasource:
+    url: jdbc:postgresql://localhost:5432/bpd
+    username: bitri
+    password: bitri
+    driver-class-name: org.postgresql.Driver
+    # Optional: connection pool settings
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+  liquibase:
+    change-log: classpath:db.changelog-master.xml
+    drop-first: false
+    enabled: true
+    default-schema: public
+    liquibase-schema: public
+security:
+  user:
+    name: admin
+    password: admin123
+    roles: USER

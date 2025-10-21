@@ -6,7 +6,7 @@
             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
 
     <!-- Example changeSet for audit_entity table -->
-    <changeSet id="1" author="pramodimo">
+    <changeSet id="1" author="pramodimom">
         <createTable tableName="audit_entity">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true"/>

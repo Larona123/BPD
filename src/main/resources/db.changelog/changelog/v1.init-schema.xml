@@ -5,6 +5,7 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
 		           https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
 
+
     <changeSet id="v1-project-dashboard-schema" author="pramodimo">
 
         <!-- CLIENT TABLE -->
@@ -141,4 +142,38 @@
                                  onDelete="CASCADE" constraintName="fk_hardware_resource_resource"/>
 
     </changeSet>
+
+
+    <changeSet id="v2-user-management-schema" author="pramodimo">
+
+        <!-- USERS TABLE -->
+        <createTable tableName="users">
+            <column name="id" type="SERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="first_name" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <!-- Password must be long enough for BCrypt hash -->
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- Add an index to the email column for faster lookups -->
+        <createIndex tableName="users" indexName="idx_user_email" unique="true">
+            <column name="email"/>
+        </createIndex>
+
+    </changeSet>
+
 </databaseChangeLog>

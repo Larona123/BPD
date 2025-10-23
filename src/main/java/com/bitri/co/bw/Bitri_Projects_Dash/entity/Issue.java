@@ -21,11 +21,20 @@ public class Issue {
     private Long id;
 
     private String title;
+
     private String description;
+
     private String status;
+
+    private String severity;
+
+    private String priority;
 
     @Column(name = "reported_on")
     private LocalDate reportedOn;
+
+    @Column(name = "reported_by")
+    private String reportedBy;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")

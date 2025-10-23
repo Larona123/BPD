@@ -24,8 +24,6 @@ public class HardwareResource {
     @Column(name = "serial_number")
     private String serialNumber;
 
-    private String vendor;
-
     @Column(name = "under_warranty")
     private Boolean underWarranty;
 

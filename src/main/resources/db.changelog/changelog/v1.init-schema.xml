@@ -176,4 +176,61 @@
 
     </changeSet>
 
+
+    <changeSet id="v1-2-add-cost-to-resource" author="pramodimo">
+        <comment>Adds the missing cost column to the resource parent table.</comment>
+        <addColumn tableName="resource">
+            <column name="cost" type="NUMERIC(10,2)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="v1-4-update-project-entities" author="pramodimo">
+        <comment>Updates client (add phone_number), hardware_resource (drop vendor), restructures risk (drop impact/likelihood, add severity/owner/date_raised/mitigation_plan), and adds columns to the existing issue table (title, priority, reported_on, reported_by).</comment>
+
+        <!-- 1. CLIENT TABLE UPDATE: Add phone_number -->
+        <addColumn tableName="client">
+            <column name="phone_number" type="VARCHAR(30)"/>
+        </addColumn>
+
+        <!-- 2. HARDWARE RESOURCE TABLE UPDATE: Remove vendor -->
+        <dropColumn tableName="hardware_resource" columnName="vendor"/>
+
+        <!-- 3. RISK TABLE RESTRUCTURE: Drop old columns first -->
+        <dropColumn tableName="risk" columnName="impact"/>
+        <dropColumn tableName="risk" columnName="likelihood"/>
+
+        <!-- 4. RISK TABLE RESTRUCTURE: Add all required new columns -->
+        <addColumn tableName="risk">
+            <column name="severity" type="VARCHAR(50)"/>
+        </addColumn>
+        <addColumn tableName="risk">
+            <column name="owner" type="VARCHAR(100)"/>
+        </addColumn>
+        <addColumn tableName="risk">
+            <column name="date_raised" type="DATE"/>
+        </addColumn>
+        <addColumn tableName="risk">
+            <column name="mitigation_plan" type="TEXT"/>
+        </addColumn>
+
+        <!-- 5. ISSUE TABLE UPDATE: Add all missing columns to the EXISTING table -->
+        <addColumn tableName="issue">
+            <column name="title" type="VARCHAR(150)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="issue">
+            <column name="priority" type="VARCHAR(50)"/>
+        </addColumn>
+        <addColumn tableName="issue">
+            <column name="reported_on" type="DATE"/>
+        </addColumn>
+        <addColumn tableName="issue">
+            <column name="reported_by" type="VARCHAR(100)"/>
+        </addColumn>
+
+    </changeSet>
+
 </databaseChangeLog>

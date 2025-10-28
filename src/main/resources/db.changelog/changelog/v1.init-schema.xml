@@ -233,4 +233,34 @@
 
     </changeSet>
 
+    <!-- TASK MANAGEMENT TABLE -->
+    <changeSet id="v1-5-add-task-management" author="pramodimo">
+        <comment>Adds the Task table for project management.</comment>
+        <createTable tableName="tasks">
+            <column name="id" type="SERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="task_description" type="VARCHAR(500)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="assignee" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="priority" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="due_date" type="DATE"/>
+            <column name="project_id" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="tasks" baseColumnNames="project_id"
+                                 referencedTableName="project" referencedColumnNames="id"
+                                 onDelete="CASCADE" constraintName="fk_task_project"/>
+    </changeSet>
+
 </databaseChangeLog>

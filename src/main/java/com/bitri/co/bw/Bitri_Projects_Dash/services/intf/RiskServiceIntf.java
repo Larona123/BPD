@@ -13,4 +13,8 @@ public interface RiskServiceIntf {
     Risk save(Risk risk);
 
     void delete(Long id);
+
+    Risk updateRisk(Long id, Risk risk);
+
+    List<Risk> getRisksByProjectId(Long projectId);
 }

@@ -1,6 +1,7 @@
 package com.bitri.co.bw.Bitri_Projects_Dash.services.impl;
 
 import com.bitri.co.bw.Bitri_Projects_Dash.entity.HumanResource;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.bitri.co.bw.Bitri_Projects_Dash.repository.HumanResourceRepository;
@@ -13,7 +14,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class HumanResourceServiceImpl implements HumanResourceServiceIntf {
 
-    final HumanResourceRepository humanResourceRepository;
+    private final HumanResourceRepository humanResourceRepository;
+    private final ResourceServiceImpl resourceServiceImpl;
 
     @Override
     public List<HumanResource> getAll() {
@@ -26,11 +28,13 @@ public class HumanResourceServiceImpl implements HumanResourceServiceIntf {
     }
 
     @Override
+    @Transactional
     public HumanResource save(HumanResource humanResource) {
-        return humanResourceRepository.save(humanResource);
+        return (HumanResource) resourceServiceImpl.save(humanResource);
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
         humanResourceRepository.deleteById(id);
     }

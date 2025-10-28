@@ -1,24 +1,26 @@
 package com.bitri.co.bw.Bitri_Projects_Dash.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-@Data
+@DiscriminatorColumn(name = "dtype", discriminatorType = DiscriminatorType.STRING)
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 @Table(name = "resource")
 @JsonTypeInfo(
-        use = JsonTypeInfo.Id.NAME,         // use the type name in JSON
-        include = JsonTypeInfo.As.PROPERTY, // include it as a field in JSON
-        property = "type"                   // the field name
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "type"
 )
 @JsonSubTypes({
         @JsonSubTypes.Type(value = HumanResource.class, name = "human"),
@@ -36,7 +38,20 @@ public class Resource {
     @Column(name = "cost")
     protected Double cost;
 
+    @Transient
+    @JsonProperty("projectId")
+    private Long projectInputId;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_id")
+    @JoinColumn(name = "project_id" , nullable = false)
+    @JsonIgnore
     protected Project project;
+
+    public Long getProjectInputId() {
+        if (this.projectInputId != null) {
+            return this.projectInputId;
+        }
+        return this.project != null ? this.project.getId() : null;
+    }
+
 }

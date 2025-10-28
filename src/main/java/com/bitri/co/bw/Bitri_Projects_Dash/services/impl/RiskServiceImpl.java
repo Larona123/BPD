@@ -34,4 +34,14 @@ public class RiskServiceImpl implements RiskServiceIntf {
     public void delete(Long id) {
         riskRepository.deleteById(id);
     }
+
+    @Override
+    public Risk updateRisk(Long id, Risk risk) {
+        return null;
+    }
+
+    @Override
+    public List<Risk> getRisksByProjectId(Long projectId) {
+        return null;
+    }
 }

@@ -1,5 +1,9 @@
 package com.bitri.co.bw.Bitri_Projects_Dash.entity;
 
+import com.bitri.co.bw.Bitri_Projects_Dash.enumeration.IssuePriority;
+import com.bitri.co.bw.Bitri_Projects_Dash.enumeration.IssueStatus;
+import com.bitri.co.bw.Bitri_Projects_Dash.enumeration.RiskAndIssueSeverity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,11 +28,14 @@ public class Issue {
 
     private String description;
 
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private IssueStatus status;
 
-    private String severity;
+    @Enumerated(EnumType.STRING)
+    private RiskAndIssueSeverity severity;
 
-    private String priority;
+    @Enumerated(EnumType.STRING)
+    private IssuePriority priority;
 
     @Column(name = "reported_on")
     private LocalDate reportedOn;
@@ -37,6 +44,7 @@ public class Issue {
     private String reportedBy;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_id")
+    @JoinColumn(name = "project_id", nullable = false)
+    @JsonIgnore
     private Project project;
 }

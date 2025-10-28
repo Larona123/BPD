@@ -2,6 +2,7 @@ package com.bitri.co.bw.Bitri_Projects_Dash.services.impl;
 
 
 import com.bitri.co.bw.Bitri_Projects_Dash.entity.HardwareResource;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.bitri.co.bw.Bitri_Projects_Dash.repository.HardwareResourceRepository;
@@ -15,6 +16,7 @@ import java.util.Optional;
 public class HardwareReourceServiceImpl implements HardwareResourceServiceIntf {
 
     private final HardwareResourceRepository hardwareResourceRepository;
+    private final ResourceServiceImpl resourceServiceImpl;
 
     @Override
     public List<HardwareResource> getAll() {
@@ -27,11 +29,13 @@ public class HardwareReourceServiceImpl implements HardwareResourceServiceIntf {
     }
 
     @Override
+    @Transactional
     public HardwareResource save(HardwareResource hardwareResource) {
-        return hardwareResourceRepository.save(hardwareResource);
+        return (HardwareResource) resourceServiceImpl.save(hardwareResource);
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
         hardwareResourceRepository.deleteById(id);
     }

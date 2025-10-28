@@ -2,6 +2,7 @@ package com.bitri.co.bw.Bitri_Projects_Dash.controller;
 
 import com.bitri.co.bw.Bitri_Projects_Dash.entity.Resource;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.bitri.co.bw.Bitri_Projects_Dash.services.intf.ResourceServiceIntf;
@@ -31,7 +32,8 @@ public class ResourceController {
 
     @PostMapping
     public Resource create(@RequestBody Resource resource) {
-        return resourceService.save(resource);
+        Resource savedResource = resourceService.save(resource);
+        return new ResponseEntity<>(savedResource, HttpStatus.CREATED).getBody();
     }
 
     @PutMapping("/{id}")

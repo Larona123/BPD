@@ -27,6 +27,7 @@ public class HumanResourceServiceImpl implements HumanResourceServiceIntf {
         return humanResourceRepository.findById(id);
     }
 
+
     @Override
     @Transactional
     public HumanResource save(HumanResource humanResource) {

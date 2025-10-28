@@ -263,4 +263,51 @@
                                  onDelete="CASCADE" constraintName="fk_task_project"/>
     </changeSet>
 
+
+    <!-- NEW BUDGET TABLE ADDITION -->
+    <changeSet id="v1-6-add-budget-table" author="pramodimo">
+        <comment>Adds the Budget table for tracking project hours, expenditure, and status.</comment>
+        <createTable tableName="budget">
+            <column name="id" type="SERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="planned_hours" type="NUMERIC(10,2)"/>
+            <column name="actual_hours" type="NUMERIC(10,2)"/>
+            <column name="planned_expenditure" type="NUMERIC(12,2)"/>
+            <column name="actual_expenditure" type="NUMERIC(12,2)"/>
+            <column name="planned_time_duration" type="NUMERIC(10,2)"/>
+            <column name="actual_time_duration" type="NUMERIC(10,2)"/>
+            <column name="planned_budget" type="NUMERIC(12,2)"/>
+            <column name="actual_budget" type="NUMERIC(12,2)"/>
+            <column name="percent_spent" type="NUMERIC(5,2)"/>
+            <column name="remaining" type="NUMERIC(12,2)"/>
+            <column name="status" type="VARCHAR(50)"/>
+            <column name="notes" type="VARCHAR(1000)"/>
+
+            <column name="project_id" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="budget" baseColumnNames="project_id"
+                                 referencedTableName="project" referencedColumnNames="id"
+                                 onDelete="CASCADE" constraintName="fk_budget_project"/>
+    </changeSet>
+
+    <changeSet id="v1-7-add-task-assignment-fields" author="pramodimo">
+        <comment>Adds the assigned_by and date_assigned columns to the tasks table.</comment>
+
+        <addColumn tableName="tasks">
+            <column name="assigned_by" type="VARCHAR(100)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+
+        <addColumn tableName="tasks">
+            <column name="date_assigned" type="DATE">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

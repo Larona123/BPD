@@ -27,6 +27,12 @@ public class Task {
     @Column(nullable = false)
     private String assignee;
 
+    @Column(name = "assigned_by", nullable = false)
+    private String assignedBy;
+
+    @Column(name = "date_assigned", nullable = false)
+    private LocalDate dateAssigned = LocalDate.now();
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private IssuePriority priority;

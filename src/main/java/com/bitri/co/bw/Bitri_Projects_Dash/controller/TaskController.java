@@ -35,7 +35,6 @@ public class TaskController {
 
     @PostMapping
     public ResponseEntity<Task> createTask(@RequestBody Task task) {
-        // The service layer handles validation and linking to the Project entity
         Task savedTask = taskService.save(task);
         return new ResponseEntity<>(savedTask, HttpStatus.CREATED);
     }
@@ -44,15 +43,13 @@ public class TaskController {
     public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody Task taskDetails) {
         return taskService.getById(id)
                 .map(existingTask -> {
-                    // Update fields
+
                     existingTask.setTaskDescription(taskDetails.getTaskDescription());
                     existingTask.setAssignee(taskDetails.getAssignee());
                     existingTask.setPriority(taskDetails.getPriority());
                     existingTask.setStatus(taskDetails.getStatus());
                     existingTask.setDueDate(taskDetails.getDueDate());
 
-                    // Crucially, use the ProjectId from the request body if present,
-                    // which the service layer will use to update the FK link.
                     if (taskDetails.getProjectId() != null) {
                         existingTask.setProjectId(taskDetails.getProjectId());
                     }

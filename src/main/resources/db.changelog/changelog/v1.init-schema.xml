@@ -310,4 +310,33 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="1.0.1-1" author="pramodimo">
+        <comment>Adding 'status' column to the 'project' table for project tracking. Using VARCHAR(50) for optimized enum storage.</comment>
+
+        <addColumn tableName="project">
+            <column name="status" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+    </changeSet>
+
+    <changeSet id="v1-8-add-project-manager" author="pramodimo">
+        <comment>Adds the project_manager column to the project table for accountability.</comment>
+        <addColumn tableName="project">
+            <column name="project_manager" type="VARCHAR(100)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="v1-9-add-status-to-risk" author="pramodimo">
+        <comment>Adds the 'status' column to the 'risk' table to track whether a risk is open or closed.</comment>
+        <addColumn tableName="risk">
+            <column name="status" type="VARCHAR(50)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

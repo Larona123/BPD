@@ -1,6 +1,7 @@
 package com.bitri.co.bw.Bitri_Projects_Dash.entity;
 
 import com.bitri.co.bw.Bitri_Projects_Dash.enumeration.RiskAndIssueSeverity;
+import com.bitri.co.bw.Bitri_Projects_Dash.enumeration.RiskStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -26,6 +27,9 @@ public class Risk {
 
     @Enumerated(EnumType.STRING)
     private RiskAndIssueSeverity severity;
+
+    @Enumerated(EnumType.STRING)
+    private RiskStatus status;
 
     private String owner;
 

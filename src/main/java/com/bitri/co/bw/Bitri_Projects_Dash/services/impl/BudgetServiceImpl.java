@@ -15,7 +15,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class BudgetServiceImpl implements BudgetServiceIntf {
+public class    BudgetServiceImpl implements BudgetServiceIntf {
 
     private final BudgetRepository budgetRepository;
     private final ProjectRepository projectRepository;
@@ -91,5 +91,10 @@ public class BudgetServiceImpl implements BudgetServiceIntf {
     @Transactional
     public void delete(Long id) {
         budgetRepository.deleteById(id);
+    }
+
+    @Override
+    public Double calculateTotalExpenditure() {
+        return budgetRepository.calculateTotalActualExpenditure();
     }
 }

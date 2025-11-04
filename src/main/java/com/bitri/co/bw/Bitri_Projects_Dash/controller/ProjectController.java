@@ -1,11 +1,15 @@
 package com.bitri.co.bw.Bitri_Projects_Dash.controller;
 
 import com.bitri.co.bw.Bitri_Projects_Dash.entity.Project;
+import com.bitri.co.bw.Bitri_Projects_Dash.enumeration.ProjectStatus;
+import com.bitri.co.bw.Bitri_Projects_Dash.model.DashboardMetricsDTO;
+import com.bitri.co.bw.Bitri_Projects_Dash.model.ProjectStatusCountResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.bitri.co.bw.Bitri_Projects_Dash.services.intf.ProjectServiceIntf;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -49,6 +53,9 @@ public class ProjectController {
         return ResponseEntity.ok(saved);
     }
 
+
+
+
     @PutMapping("/{id}")
     public ResponseEntity<Project> update(@PathVariable Long id, @RequestBody Project project) {
         project.setId(id);
@@ -68,6 +75,20 @@ public class ProjectController {
 
         Project updated = projectService.save(project);
         return ResponseEntity.ok(updated);
+    }
+
+    @GetMapping("/counts/status")
+    public ResponseEntity<List<ProjectStatusCountResponse>> getProjectStatusCounts() {
+        // Replace mock data with real service call
+        List<ProjectStatusCountResponse> counts = projectService.getProjectStatusCounts();
+        return ResponseEntity.ok(counts);
+    }
+
+
+    @GetMapping("/metrics")
+    public ResponseEntity<DashboardMetricsDTO> getDashboardMetrics() {
+        DashboardMetricsDTO metrics = projectService.getDashboardMetrics();
+        return ResponseEntity.ok(metrics);
     }
 
     @DeleteMapping("/{id}")

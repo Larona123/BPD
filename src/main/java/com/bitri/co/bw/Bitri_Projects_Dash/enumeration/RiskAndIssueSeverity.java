@@ -7,7 +7,8 @@ public enum RiskAndIssueSeverity {
     EXTREME,
     HIGH,
     MEDIUM,
-    LOW;
+    LOW,
+    SOLVED;
 
     @JsonCreator
     public static RiskAndIssueSeverity fromString(String value) {
@@ -15,10 +16,8 @@ public enum RiskAndIssueSeverity {
             return null;
         }
         try {
-            // Convert the input string to uppercase and find the matching enum constant
             return RiskAndIssueSeverity.valueOf(value.toUpperCase());
         } catch (IllegalArgumentException e) {
-            // Log the error or throw a more specific exception if needed
             throw new IllegalArgumentException(
                     "Invalid severity value: '" + value + "'. Must be one of: " +
                             java.util.Arrays.toString(RiskAndIssueSeverity.values())

@@ -16,18 +16,11 @@ import java.util.List;
 public class BudgetController {
 
     private final BudgetServiceIntf budgetService;
-
-    /**
-     * Retrieves all budget entries.
-     */
     @GetMapping
     public ResponseEntity<List<Budget>> getAllBudgets() {
         return ResponseEntity.ok(budgetService.getAll());
     }
 
-    /**
-     * Retrieves a single budget by its ID.
-     */
     @GetMapping("/{id}")
     public ResponseEntity<Budget> getBudgetById(@PathVariable Long id) {
         return budgetService.getById(id)
@@ -35,9 +28,6 @@ public class BudgetController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    /**
-     * Retrieves the budget associated with a specific Project ID.
-     */
     @GetMapping("/project/{projectId}")
     public ResponseEntity<Budget> getBudgetByProjectId(@PathVariable Long projectId) {
         return budgetService.getBudgetByProjectId(projectId)
@@ -45,27 +35,18 @@ public class BudgetController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    /**
-     * Creates a new budget entry.
-     * The Budget entity must contain a valid 'projectId' in its transient field.
-     */
     @PostMapping
     public ResponseEntity<Budget> createBudget(@RequestBody Budget budget) {
         try {
             Budget savedBudget = budgetService.save(budget);
             return new ResponseEntity<>(savedBudget, HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
-            // Handles missing projectId or other invalid data
             return ResponseEntity.badRequest().build();
         } catch (EntityNotFoundException e) {
-            // Handles case where the referenced Project ID doesn't exist
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 
-    /**
-     * Updates an existing budget entry.
-     */
     @PutMapping("/{id}")
     public ResponseEntity<Budget> updateBudget(@PathVariable Long id,
                                                @RequestBody Budget budget) {
@@ -86,5 +67,11 @@ public class BudgetController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/metrics/total-expenditure")
+    public ResponseEntity<Double> getTotalExpenditure() {
+        Double total = budgetService.calculateTotalExpenditure();
+        return ResponseEntity.ok(total);
     }
 }

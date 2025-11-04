@@ -12,4 +12,6 @@ public interface BudgetServiceIntf {
     Budget update(Long id, Budget budget);
     void delete(Long id);
     Optional<Budget> getBudgetByProjectId(Long projectId);
+
+    Double calculateTotalExpenditure();
 }

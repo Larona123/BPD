@@ -1,15 +1,15 @@
 package com.bitri.co.bw.Bitri_Projects_Dash.services.intf;
 
 import com.bitri.co.bw.Bitri_Projects_Dash.entity.Task;
+import com.bitri.co.bw.Bitri_Projects_Dash.model.TaskRequest;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface TaskServiceIntf {
-
-    List<Task> getAll();
-    Optional<Task> getById(Long id);
-    Task save(Task task);
-    void delete(Long id);
-    List<Task> getTasksByProjectId(Long projectId);
+    Task create(TaskRequest taskDto);
+    Task getTaskById(Long id);
+    List<Task> getAllTasks();
+    Task update(Long id, TaskRequest taskDto);
+    void deleteTask(Long id);
 }

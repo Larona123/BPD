@@ -1,6 +1,7 @@
 package com.bitri.co.bw.Bitri_Projects_Dash.controller;
 
 import com.bitri.co.bw.Bitri_Projects_Dash.entity.Task;
+import com.bitri.co.bw.Bitri_Projects_Dash.model.TaskRequest;
 import com.bitri.co.bw.Bitri_Projects_Dash.services.intf.TaskServiceIntf;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,54 +19,29 @@ public class TaskController {
 
     @GetMapping
     public ResponseEntity<List<Task>> getAllTasks() {
-        return ResponseEntity.ok(taskService.getAll());
+        return new ResponseEntity<>(taskService.getAllTasks(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Task> getTaskById(@PathVariable Long id) {
-        return taskService.getById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/project/{projectId}")
-    public ResponseEntity<List<Task>> getTasksByProjectId(@PathVariable Long projectId) {
-        return ResponseEntity.ok(taskService.getTasksByProjectId(projectId));
+        return new ResponseEntity<>(taskService.getTaskById(id), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<Task> createTask(@RequestBody Task task) {
-        Task savedTask = taskService.save(task);
-        return new ResponseEntity<>(savedTask, HttpStatus.CREATED);
+    public ResponseEntity<Task> create(@RequestBody TaskRequest taskDto) {
+        Task createdTask = taskService.create(taskDto);
+        return new ResponseEntity<>(createdTask, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody Task taskDetails) {
-        return taskService.getById(id)
-                .map(existingTask -> {
-
-                    existingTask.setTaskDescription(taskDetails.getTaskDescription());
-                    existingTask.setAssignee(taskDetails.getAssignee());
-                    existingTask.setPriority(taskDetails.getPriority());
-                    existingTask.setStatus(taskDetails.getStatus());
-                    existingTask.setDueDate(taskDetails.getDueDate());
-
-                    if (taskDetails.getProjectId() != null) {
-                        existingTask.setProjectId(taskDetails.getProjectId());
-                    }
-
-                    Task updatedTask = taskService.save(existingTask);
-                    return ResponseEntity.ok(updatedTask);
-                })
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<Task> update(@PathVariable Long id, @RequestBody TaskRequest taskDto) {
+        Task updatedTask = taskService.update(id, taskDto);
+        return new ResponseEntity<>(updatedTask, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
-        if (taskService.getById(id).isPresent()) {
-            taskService.delete(id);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.notFound().build();
+        taskService.deleteTask(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

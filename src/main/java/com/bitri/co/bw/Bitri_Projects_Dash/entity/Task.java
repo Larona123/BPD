@@ -45,21 +45,9 @@ public class Task {
     private LocalDate dueDate;
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "project_id", nullable = false)
-    @JsonIgnore
+
     private Project project;
 
-    @Transient
-    private Long projectId;
-
-
-    @PostLoad
-    @PostPersist
-    @PostUpdate
-    public void setProjectIdOnLoad() {
-        if (this.project != null) {
-            this.projectId = this.project.getId();
-        }
-    }
 }

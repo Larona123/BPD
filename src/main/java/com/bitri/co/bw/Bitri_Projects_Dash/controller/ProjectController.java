@@ -3,8 +3,12 @@ package com.bitri.co.bw.Bitri_Projects_Dash.controller;
 import com.bitri.co.bw.Bitri_Projects_Dash.entity.Project;
 import com.bitri.co.bw.Bitri_Projects_Dash.enumeration.ProjectStatus;
 import com.bitri.co.bw.Bitri_Projects_Dash.model.DashboardMetricsDTO;
+import com.bitri.co.bw.Bitri_Projects_Dash.model.ProjectRequest;
+import com.bitri.co.bw.Bitri_Projects_Dash.model.ProjectResponse;
 import com.bitri.co.bw.Bitri_Projects_Dash.model.ProjectStatusCountResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.bitri.co.bw.Bitri_Projects_Dash.services.intf.ProjectServiceIntf;
@@ -22,78 +26,45 @@ public class ProjectController {
     private final ProjectServiceIntf projectService;
 
     @GetMapping
-    public List<Project> getAll() {
+    public List<ProjectResponse> getAll() {
         return projectService.getAll();
     }
-
     @GetMapping("/{id}")
-    public ResponseEntity<Project> getById(@PathVariable Long id) {
+    public ResponseEntity<ProjectResponse> getById(@PathVariable Long id) {
         return projectService.getById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-
     @PostMapping
-    public ResponseEntity<Project> create(@RequestBody Project project) {
-        // make sure all children know their parent project
-        if (project.getRisks() != null) {
-            project.getRisks().forEach(r -> r.setProject(project));
-        }
-        if (project.getIssues() != null) {
-            project.getIssues().forEach(i -> i.setProject(project));
-        }
-        if (project.getResources() != null) {
-            project.getResources().forEach(res -> res.setProject(project));
-        }
-        if (project.getPerformance() != null) {
-            project.getPerformance().setProject(project);
-        }
-
-        Project saved = projectService.save(project);
-        return ResponseEntity.ok(saved);
+    public ResponseEntity<ProjectResponse> create(@Valid @RequestBody ProjectRequest requestDTO) {
+        ProjectResponse saved = projectService.save(requestDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
-
-
-
 
     @PutMapping("/{id}")
-    public ResponseEntity<Project> update(@PathVariable Long id, @RequestBody Project project) {
-        project.setId(id);
+    public ResponseEntity<ProjectResponse> update(
+            @PathVariable Long id,
+            @RequestBody ProjectRequest requestDTO) {
 
-        if (project.getRisks() != null) {
-            project.getRisks().forEach(r -> r.setProject(project));
-        }
-        if (project.getIssues() != null) {
-            project.getIssues().forEach(i -> i.setProject(project));
-        }
-        if (project.getResources() != null) {
-            project.getResources().forEach(res -> res.setProject(project));
-        }
-        if (project.getPerformance() != null) {
-            project.getPerformance().setProject(project);
-        }
-
-        Project updated = projectService.save(project);
+        ProjectResponse updated = projectService.update(id, requestDTO);
         return ResponseEntity.ok(updated);
-    }
-
-    @GetMapping("/counts/status")
-    public ResponseEntity<List<ProjectStatusCountResponse>> getProjectStatusCounts() {
-        // Replace mock data with real service call
-        List<ProjectStatusCountResponse> counts = projectService.getProjectStatusCounts();
-        return ResponseEntity.ok(counts);
-    }
-
-
-    @GetMapping("/metrics")
-    public ResponseEntity<DashboardMetricsDTO> getDashboardMetrics() {
-        DashboardMetricsDTO metrics = projectService.getDashboardMetrics();
-        return ResponseEntity.ok(metrics);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         projectService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/counts/status")
+    public ResponseEntity<List<ProjectStatusCountResponse>> getProjectStatusCounts() {
+        List<ProjectStatusCountResponse> counts = projectService.getProjectStatusCounts();
+        return ResponseEntity.ok(counts);
+    }
+
+    @GetMapping("/metrics")
+    public ResponseEntity<DashboardMetricsDTO> getDashboardMetrics() {
+        DashboardMetricsDTO metrics = projectService.getDashboardMetrics();
+        return ResponseEntity.ok(metrics);
     }
 }

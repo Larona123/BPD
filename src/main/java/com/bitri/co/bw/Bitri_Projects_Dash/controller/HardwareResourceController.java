@@ -1,7 +1,11 @@
 package com.bitri.co.bw.Bitri_Projects_Dash.controller;
 
 import com.bitri.co.bw.Bitri_Projects_Dash.entity.HardwareResource;
+import com.bitri.co.bw.Bitri_Projects_Dash.model.HardwareResourceRequest;
+import com.bitri.co.bw.Bitri_Projects_Dash.model.HardwareResourceResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.bitri.co.bw.Bitri_Projects_Dash.services.intf.HardwareResourceServiceIntf;
@@ -16,30 +20,29 @@ import java.util.List;
 public class HardwareResourceController {
 
     private final HardwareResourceServiceIntf hardwareResourceService;
-
-    @GetMapping
-    public List<HardwareResource> getAll() {
-        return hardwareResourceService.getAll();
+    @PostMapping
+    public ResponseEntity<HardwareResourceResponse> create(@Valid @RequestBody HardwareResourceRequest request) {
+        HardwareResourceResponse response = hardwareResourceService.create(request);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<HardwareResource> getById(@PathVariable Long id) {
-        return hardwareResourceService.getById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<HardwareResourceResponse> getHardwareResourceById(@PathVariable Long id) {
+        HardwareResourceResponse response = hardwareResourceService.findById(id);
+        return ResponseEntity.ok(response);
     }
 
-    @PostMapping
-    public HardwareResource create(@RequestBody HardwareResource hardwareResource) {
-        return hardwareResourceService.save(hardwareResource);
+    @GetMapping("/project/{projectId}")
+    public ResponseEntity<List<HardwareResourceResponse>> getAllHardwareResourcesByProjectId(@PathVariable Long projectId) {
+        List<HardwareResourceResponse> resources = hardwareResourceService.findAllByProjectId(projectId);
+        return ResponseEntity.ok(resources);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<HardwareResource> update(@PathVariable Long id, @RequestBody HardwareResource hardwareResource) {
-        hardwareResource.setId(id);
-        return ResponseEntity.ok(hardwareResourceService.save(hardwareResource));
+    public ResponseEntity<HardwareResourceResponse> update(@PathVariable Long id, @Valid @RequestBody HardwareResourceRequest request) {
+        HardwareResourceResponse response = hardwareResourceService.update(id, request);
+        return ResponseEntity.ok(response);
     }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         hardwareResourceService.delete(id);

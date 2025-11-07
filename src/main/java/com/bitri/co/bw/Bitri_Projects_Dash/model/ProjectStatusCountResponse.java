@@ -1,9 +1,10 @@
 package com.bitri.co.bw.Bitri_Projects_Dash.model;
 
 import com.bitri.co.bw.Bitri_Projects_Dash.enumeration.ProjectStatus;
+import lombok.Data;
 import lombok.Value;
 
-@Value
+@Data
 public class ProjectStatusCountResponse {
 
     private ProjectStatus status;

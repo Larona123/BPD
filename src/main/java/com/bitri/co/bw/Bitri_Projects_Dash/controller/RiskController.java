@@ -2,12 +2,16 @@ package com.bitri.co.bw.Bitri_Projects_Dash.controller;
 
 
 import com.bitri.co.bw.Bitri_Projects_Dash.entity.Risk;
+import com.bitri.co.bw.Bitri_Projects_Dash.model.RiskRequest;
+import com.bitri.co.bw.Bitri_Projects_Dash.model.RiskResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.bitri.co.bw.Bitri_Projects_Dash.services.intf.RiskServiceIntf;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/risks")
@@ -18,32 +22,34 @@ public class RiskController {
 
     private final RiskServiceIntf riskService;
 
-    @GetMapping
-    public List<Risk> getAll() {
-        return riskService.getAll();
+    @GetMapping("/project/{projectId}")
+    public ResponseEntity<List<RiskResponse>> getRisksByProjectId(@PathVariable Long projectId) {
+        List<RiskResponse> risks = riskService.getRisksByProjectId(projectId);
+        return ResponseEntity.ok(risks);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Risk> getById(@PathVariable Long id) {
-        return riskService.getById(id)
+    @GetMapping("/{riskId}")
+    public ResponseEntity<RiskResponse> getRiskById(@PathVariable Long riskId) {
+        Optional<RiskResponse> optionalResponse = riskService.getRiskById(riskId);
+        return optionalResponse
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
-
     @PostMapping
-    public Risk create(@RequestBody Risk risk) {
-        return riskService.save(risk);
+    public ResponseEntity<RiskResponse> create(@RequestBody RiskRequest riskRequest) {
+        RiskResponse createdRisk = riskService.save(riskRequest);
+        return new ResponseEntity<>(createdRisk, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Risk> update(@PathVariable Long id, @RequestBody Risk risk) {
-        risk.setId(id);
-        return ResponseEntity.ok(riskService.save(risk));
+    @PutMapping("/{riskId}")
+    public ResponseEntity<RiskResponse> update(@PathVariable Long riskId, @RequestBody RiskRequest riskRequest) {
+        RiskResponse updatedRisk = riskService.updateRisk(riskId, riskRequest);
+        return ResponseEntity.ok(updatedRisk);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        riskService.delete(id);
+    @DeleteMapping("/{riskId}")
+    public ResponseEntity<Void> delete(@PathVariable Long riskId) {
+        riskService.delete(riskId);
         return ResponseEntity.noContent().build();
     }
 }

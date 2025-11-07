@@ -7,12 +7,16 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface RiskRepository extends JpaRepository<Risk, Long> {
 
     Long countBySeverity(RiskAndIssueSeverity severity);
 
     Long countByStatus(RiskStatus status);
+
+    List<Risk> findByProjectId(Long projectId);
     @Query("SELECT COUNT(r) FROM Risk r")
     Long countTotalRisks();
 

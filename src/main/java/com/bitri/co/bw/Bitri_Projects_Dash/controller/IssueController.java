@@ -1,7 +1,10 @@
 package com.bitri.co.bw.Bitri_Projects_Dash.controller;
 
 import com.bitri.co.bw.Bitri_Projects_Dash.entity.Issue;
+import com.bitri.co.bw.Bitri_Projects_Dash.model.IssueRequest;
+import com.bitri.co.bw.Bitri_Projects_Dash.model.IssueResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.bitri.co.bw.Bitri_Projects_Dash.services.intf.IssueServiceIntf;
@@ -12,37 +15,39 @@ import java.util.List;
 @RequestMapping("/api/issues")
 @RequiredArgsConstructor
 @CrossOrigin("*")
-
 public class IssueController {
 
     private final IssueServiceIntf issueService;
-
     @GetMapping
-    public List<Issue> getAll() {
-        return issueService.getAll();
+    public ResponseEntity<List<IssueResponse>> getAllIssues() {
+        return ResponseEntity.ok(issueService.getAllIssues());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Issue> getById(@PathVariable Long id) {
-        return issueService.getById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<IssueResponse> getIssueById(@PathVariable Long id) {
+        return ResponseEntity.ok(issueService.getIssueById(id));
+    }
+
+    @GetMapping("/project/{projectId}")
+    public ResponseEntity<List<IssueResponse>> getIssuesByProjectId(@PathVariable Long projectId) {
+        return ResponseEntity.ok(issueService.getIssuesByProjectId(projectId));
     }
 
     @PostMapping
-    public Issue create(@RequestBody Issue issue) {
-        return issueService.save(issue);
+    public ResponseEntity<IssueResponse> create(@RequestBody IssueRequest request) {
+        IssueResponse createdIssue = issueService.create(request);
+        return new ResponseEntity<>(createdIssue, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Issue> update(@PathVariable Long id, @RequestBody Issue issue) {
-        issue.setId(id);
-        return ResponseEntity.ok(issueService.save(issue));
+    public ResponseEntity<IssueResponse> update(@PathVariable Long id, @RequestBody IssueRequest request) {
+        IssueResponse updatedIssue = issueService.update(id, request);
+        return ResponseEntity.ok(updatedIssue);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        issueService.delete(id);
+    public ResponseEntity<Void> deleteIssue(@PathVariable Long id) {
+        issueService.deleteIssue(id);
         return ResponseEntity.noContent().build();
     }
 }

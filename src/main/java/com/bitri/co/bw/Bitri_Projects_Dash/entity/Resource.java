@@ -28,6 +28,9 @@ import lombok.experimental.SuperBuilder;
 })
 
 public class Resource {
+    public enum ResourceType {
+        HUMAN, HARDWARE
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,12 +42,14 @@ public class Resource {
     protected Double cost;
 
     @Transient
+    private String type;
+
+    @Transient
     @JsonProperty("projectId")
     private Long projectInputId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id" , nullable = false)
-    @JsonIgnore
     protected Project project;
 
     public Long getProjectInputId() {
@@ -55,3 +60,5 @@ public class Resource {
     }
 
 }
+
+

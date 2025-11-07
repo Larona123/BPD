@@ -1,9 +1,7 @@
 package com.bitri.co.bw.Bitri_Projects_Dash.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -17,6 +15,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @SuperBuilder
 @Table(name = "human_resource")
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@PrimaryKeyJoinColumn(name = "id")
 public class HumanResource extends Resource {
 
     private String role;

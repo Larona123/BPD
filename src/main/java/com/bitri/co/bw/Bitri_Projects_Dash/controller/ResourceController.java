@@ -1,6 +1,7 @@
 package com.bitri.co.bw.Bitri_Projects_Dash.controller;
 
 import com.bitri.co.bw.Bitri_Projects_Dash.entity.Resource;
+import com.bitri.co.bw.Bitri_Projects_Dash.model.HardwareResourceResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,12 +20,12 @@ public class ResourceController {
     private final ResourceServiceIntf resourceService;
 
     @GetMapping
-    public List<Resource> getAll() {
+    public List<HardwareResourceResponse> getAll() {
         return resourceService.getAll();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Resource> getById(@PathVariable Long id) {
+    public ResponseEntity<HardwareResourceResponse> getById(@PathVariable Long id) {
         return resourceService.getById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());

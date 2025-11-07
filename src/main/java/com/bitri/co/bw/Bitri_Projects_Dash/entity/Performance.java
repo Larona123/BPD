@@ -29,6 +29,6 @@ public class Performance {
     private Integer actualSchedule;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_id") // Added JoinColumn for explicit OneToOne mapping
+    @JoinColumn(name = "project_id")
     private Project project;
 }
